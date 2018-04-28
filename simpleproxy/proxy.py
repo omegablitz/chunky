@@ -7,11 +7,16 @@ class ChunkyBridge(Bridge):
     quiet_mode = False
     log_level = logging.INFO
     filterme = False
+    current_server = 0
+    SERVERS = [('localhost', 25565), ('localhost', 25564)]
 
     def proxy_switch(self, new_address, new_port):
         self.filterme = True
 
-        # self.disable_forwarding()
+        self.connect_host = new_address
+        self.connect_port = new_port
+
+        self.disable_forwarding()
         self.upstream.close()
         self.connect()
 
@@ -23,7 +28,11 @@ class ChunkyBridge(Bridge):
         if chat_message.startswith("/switch"):
             self.downstream.send_packet("chat_message",
                                         self.write_chat("Switching...", "downstream"))
-            self.proxy_switch(None, None)
+            self.current_server += 1
+            self.current_server %= len(self.SERVERS)
+
+            self.proxy_switch(self.SERVERS[self.current_server][0],
+                              self.SERVERS[self.current_server][1])
         else:
             # Pass to upstream
             buff.restore()
