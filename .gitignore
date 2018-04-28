@@ -1,2 +1,4 @@
 *.jar
 *.pyc
+spigot-build/
+chunkserver/
