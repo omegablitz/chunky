@@ -11,9 +11,9 @@ class Server(SocketServer.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         data = json.loads(self.request.recv(1024*8).strip())
-        if data['route'] == 'handoff':
+        if data['route'] == '/handoff':
             global handoff_cb
-            self.handoff_cb(data)
+            handoff_cb(data)
         else:
             print("NO ROUTE SPECIFIED! req: ", data)
 

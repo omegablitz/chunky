@@ -3,12 +3,29 @@ import logging
 from twisted.internet import reactor
 from quarry.net.proxy import DownstreamFactory, Bridge
 
+global_bridge = None
+
 class ChunkyBridge(Bridge):
     quiet_mode = False
     log_level = logging.INFO
     filterme = False
     current_server = 0
     SERVERS = [('localhost', 25565), ('localhost', 25564)]
+
+    def __init__(self, downstream_factory, downstream):
+        global global_bridge
+        global_bridge = self
+
+        self.downstream_factory = downstream_factory
+        self.downstream = downstream
+
+        self.buff_type = self.downstream.buff_type
+
+        self.logger = logging.getLogger("%s{%s}" % (
+            self.__class__.__name__,
+            self.downstream.remote_addr.host))
+        self.logger.setLevel(self.log_level)
+
 
     def proxy_switch(self, new_address, new_port):
         self.filterme = True
@@ -144,8 +161,16 @@ def main(argv):
     from rpc import Server
     import json
     def handoff_hook(data):
-        factory.bridge.proxy_switch(None, None)
-        factory.bridge.upstream.send_packet("chat_message", '/state ' + json.dumps(data))
+        global global_bridge
+
+        global_bridge.current_server += 1
+        global_bridge.current_server %= len(global_bridge.SERVERS)
+
+        global_bridge.proxy_switch(global_bridge.SERVERS[global_bridge.current_server][0],
+                                   global_bridge.SERVERS[global_bridge.current_server][1])
+
+        global_bridge.upstream.send_packet("chat_message", 
+                global_bridge.write_chat('/state ' + json.dumps(data), "upstream"))
 
     Server.register_handoff_cb(handoff_hook)
 

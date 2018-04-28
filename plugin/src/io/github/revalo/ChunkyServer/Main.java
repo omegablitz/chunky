@@ -20,6 +20,7 @@ public class Main extends JavaPlugin {
             clientSocket = new Socket(REMOTE, PORT);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            System.out.println("Chunky is connected!");
 
         } catch (Exception e) {
             System.out.println("Chunky died connecting to socket: " + e.toString());
