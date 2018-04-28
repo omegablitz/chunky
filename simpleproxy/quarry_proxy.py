@@ -125,10 +125,30 @@ def main(argv):
     factory.connect_host = args.connect_host
     factory.connect_port = args.connect_port
 
+
     # Listen
     factory.listen(args.listen_host, args.listen_port)
+
+
+    from threading import Thread
+    import SocketServer
+    from rpc import Server
+    import json
+    def handoff_hook(data):
+        factory.bridge.proxy_switch(None, None)
+        factory.bridge.upstream.send_packet("chat_message", '/state ' + json.dumps(data))
+
+    Server.register_handoff_cb(handoff_hook)
+
+    HOST, PORT = "localhost", 4445
+    server = SocketServer.TCPServer((HOST, PORT), Server)
+    Thread(target=server.serve_forever).start()
+
+
+
     reactor.run()
 
 if __name__ == "__main__":
     import sys
     main(sys.argv[1:])
+
