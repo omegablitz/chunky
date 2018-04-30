@@ -2,3 +2,11 @@
 *.pyc
 spigot-build/
 chunkserver/
+
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.class

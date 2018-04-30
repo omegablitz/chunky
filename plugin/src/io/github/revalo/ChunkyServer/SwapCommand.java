@@ -34,6 +34,7 @@ public class SwapCommand implements CommandExecutor {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("route", "/handoff");
         parameters.put("name", player.getDisplayName());
+        parameters.put("uuid", player.getUniqueId().toString());
         parameters.put("location", player.getLocation().serialize());
 
         JSONObject json = new JSONObject(parameters);

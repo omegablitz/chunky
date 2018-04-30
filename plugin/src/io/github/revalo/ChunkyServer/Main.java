@@ -22,6 +22,20 @@ public class Main extends JavaPlugin {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println("Chunky is connected!");
 
+            // Start listening
+            Thread socketReader = new Thread(() -> {
+                String line;
+                while (clientSocket.isConnected()) {
+                    try {
+                        line = in.readLine();
+                        System.out.println("Socket read: " + line);
+                        StateHandler.handleStateJSON(line);
+                    } catch(IOException e) {
+                        System.out.println("Couldn't read line from socket! " + e.getMessage());
+                    }
+                }
+            });
+            socketReader.start();
         } catch (Exception e) {
             System.out.println("Chunky died connecting to socket: " + e.toString());
         }
