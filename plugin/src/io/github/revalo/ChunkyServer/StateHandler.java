@@ -8,17 +8,24 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.util.Map;
-import java.util.UUID;
 
 public class StateHandler {
-    public static void handleStateJSON(String jsonStr) {
+    public static void handleStateJSON(String jsonStr, Main main) {
         try {
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(jsonStr);
             Location location = Location.deserialize((Map<String, Object>) json.get("location"));
             Player player = Bukkit.getServer().getPlayer((String) json.get("name"));
 
-            player.teleport(location);
+            if (player == null) {
+                // Player is offline, let's defer the state transition :)
+                System.out.println("Deferring player update for JSON: " + jsonStr);
+                main.deferMap.put(player.getDisplayName(), jsonStr);
+            } else {
+                System.out.println("Applying state for JSON: " + jsonStr);
+                player.teleport(location);
+                main.deferMap.remove(player.getDisplayName());
+            }
         } catch(ParseException e) {
             System.out.println("JSON Error");
         } catch (ClassCastException e) {
