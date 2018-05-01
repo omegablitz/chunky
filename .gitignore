@@ -3,6 +3,7 @@
 spigot-build/
 chunkserver/
 
+# Java stuff
 *.war
 *.nar
 *.ear
