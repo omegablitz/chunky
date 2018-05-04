@@ -1,7 +1,9 @@
 package io.github.revalo.ChunkyServer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -45,8 +47,8 @@ public class StateHandler {
             player.teleport(location);
             main.deferMap.remove(player.getDisplayName());
 
-            player.getLocation().getChunk().unload(false, false);
-            player.getLocation().getChunk().load(false);
+            Chunk chunk = player.getLocation().getChunk();
+            ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
         }
     }
 

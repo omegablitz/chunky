@@ -1,10 +1,13 @@
 package io.github.revalo.ChunkyServer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
@@ -26,8 +29,8 @@ public class SwapCommand implements CommandExecutor {
             Player player = (Player) sender;
             player.sendMessage("You called chunky! Swapping!");
 
-            player.getWorld().unloadChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(),
-                                        true, false);
+            Chunk chunk = player.getLocation().getChunk();
+            ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
 
             sendStateToProxy(player);
         }
