@@ -3,8 +3,10 @@ package io.github.revalo.ChunkyServer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -20,8 +22,8 @@ public class Main extends JavaPlugin implements Listener {
 
     public Map<String, String> deferMap;
 
-    private final String REMOTE = "localhost";
-    private final int PORT = 4445;
+    private String REMOTE = "localhost";
+    private int PORT = 4445;
 
     @Override
     public void onEnable(){
@@ -31,6 +33,13 @@ public class Main extends JavaPlugin implements Listener {
         for (final World world : Bukkit.getWorlds()) {
             world.setAutoSave(false);
         }
+
+        // Get remote host from environ or default
+        REMOTE = System.getenv("PROXY_HOST");
+        REMOTE = REMOTE == null ? "localhost" : REMOTE;
+
+        String portStr = System.getenv("PROXY_PORT");
+        PORT = portStr == null ? 4445 : Integer.parseInt(portStr);
 
         try {
             clientSocket = new Socket(REMOTE, PORT);
@@ -80,6 +89,11 @@ public class Main extends JavaPlugin implements Listener {
         if (deferMap.containsKey(player)) {
             StateHandler.handleStateJSON(deferMap.get(player), this);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onChunkLoad(ChunkLoadEvent event) {
+
     }
 
 }
