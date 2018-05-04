@@ -47,6 +47,7 @@ public class StateHandler {
 
             player.getLocation().getChunk().unload(false, false);
             player.getLocation().getChunk().load(false);
+            player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
         }
     }
 
