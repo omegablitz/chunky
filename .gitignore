@@ -4,6 +4,7 @@ spigot-build/
 chunkserver/
 patch/
 node_modules
+.idea
 
 # Java stuff
 *.war

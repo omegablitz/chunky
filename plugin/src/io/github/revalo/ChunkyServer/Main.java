@@ -67,6 +67,7 @@ public class Main extends JavaPlugin implements Listener {
 
         this.getCommand("swap").setExecutor(new SwapCommand(out));
         this.getCommand("state").setExecutor(new StateCommand(this));
+        this.getCommand("chunky").setExecutor(new FlusherCommand());
 
         getServer().getPluginManager().registerEvents(this, this);
     }

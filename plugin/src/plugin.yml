@@ -10,3 +10,6 @@ commands:
   state:
     description: Initiates a state swap
     usage: /state
+  chunky:
+    description: Debugging
+    usage: /chunky
