@@ -44,6 +44,9 @@ public class StateHandler {
             System.out.println("Applying state for JSON: " + jsonStr);
             player.teleport(location);
             main.deferMap.remove(player.getDisplayName());
+
+            player.getLocation().getChunk().unload(false, false);
+            player.getLocation().getChunk().load(false);
         }
     }
 
