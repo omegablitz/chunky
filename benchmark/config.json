@@ -1,0 +1,8 @@
+{
+    "server": "localhost",
+    "port": 25565,
+    "num_players": 20,
+    "spread_distance": 100,
+    "spread_range": 400,
+    "spread": false
+}

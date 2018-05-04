@@ -1,5 +1,5 @@
 let localServerOptions = {
-    'port': '25565',
+    'port': '4444',
     'version': '1.12.2',
     'online-mode': false,
     'motd': 'nodejs minecraft proxy'
@@ -8,13 +8,13 @@ let localServerOptions = {
 let serverList = {
     hub: {
         host: 'localhost',
-        port: 25564,
+        port: 25565,
         isDefault: true,
         isFallback: true
     },
     minigames: {
         host: 'localhost',
-        port: 25563
+        port: 25564
     }
 }
 
@@ -53,11 +53,11 @@ net.createServer(function (sock) {
 
     // Add a 'data' event handler to this instance of socket
     sock.on('data', function (data) {
-
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
+
         // Write the data back to the socket, the client will receive it as data from the server
         dat = JSON.parse(data.toString().trim())
-        proxy.setRemoteServer(dat.uuid, next)
+        proxy.setRemoteServer('0', next)
         next = next == "hub" ? "minigames" : "hub";
 
         otherServ = sockLookup[0] == sock ? sockLookup[1] : sockLookup[0];

@@ -14,22 +14,40 @@ public class StateHandler {
         try {
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(jsonStr);
-            Location location = Location.deserialize((Map<String, Object>) json.get("location"));
-            Player player = Bukkit.getServer().getPlayer((String) json.get("name"));
+            String route = (String) json.get("route");
 
-            if (player == null) {
-                // Player is offline, let's defer the state transition :)
-                System.out.println("Deferring player update for JSON: " + jsonStr);
-                main.deferMap.put(player.getDisplayName(), jsonStr);
-            } else {
-                System.out.println("Applying state for JSON: " + jsonStr);
-                player.teleport(location);
-                main.deferMap.remove(player.getDisplayName());
+            switch (route) {
+                case "/handoff":
+                    performHandoff(json, main, jsonStr);
+                    break;
+                default:
+                    System.out.println("Unknown route " + route);
             }
+
         } catch(ParseException e) {
             System.out.println("JSON Error");
         } catch (ClassCastException e) {
             System.out.println("Cast Error");
         }
+    }
+
+    private static void performHandoff(JSONObject json, Main main, String jsonStr) {
+        Location location = Location.deserialize((Map<String, Object>) json.get("location"));
+        String playerName = (String) json.get("name");
+        Player player = Bukkit.getServer().getPlayer(playerName);
+
+        if (player == null) {
+            // Player is offline, let's defer the state transition :)
+            System.out.println("Deferring player update for JSON: " + jsonStr);
+            main.deferMap.put(playerName, jsonStr);
+        } else {
+            System.out.println("Applying state for JSON: " + jsonStr);
+            player.teleport(location);
+            main.deferMap.remove(player.getDisplayName());
+        }
+    }
+
+    private static void updateChunkownership(JSONObject json, Main main) {
+        throw new UnsupportedOperationException("Chunk ownership not implemented yet.");
     }
 }

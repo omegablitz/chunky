@@ -46,6 +46,8 @@ class Proxy extends mc.Server {
    */
   setRemoteServer (remoteClientId, newServerName) {
     let remoteClient = this.clients[remoteClientId]
+
+    console.log(require('util').inspect(this.clients));
     let oldServerName = remoteClient.currentServer
     let newServer = this.serverList[newServerName]
 

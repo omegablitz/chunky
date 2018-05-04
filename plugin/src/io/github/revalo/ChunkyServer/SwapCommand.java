@@ -1,5 +1,7 @@
 package io.github.revalo.ChunkyServer;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,6 +23,10 @@ public class SwapCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
+            for (final World world : Bukkit.getWorlds()) {
+                world.save();
+            }
+
             Player player = (Player) sender;
             player.sendMessage("You called chunky! Swapping!");
 

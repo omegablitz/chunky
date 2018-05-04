@@ -1,5 +1,7 @@
 package io.github.revalo.ChunkyServer;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -25,6 +27,11 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable(){
         this.deferMap = new HashMap<>();
 
+        // Disable auto-save
+        for (final World world : Bukkit.getWorlds()) {
+            world.setAutoSave(false);
+        }
+
         try {
             clientSocket = new Socket(REMOTE, PORT);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -39,9 +46,7 @@ public class Main extends JavaPlugin implements Listener {
                         line = in.readLine();
                         System.out.println("Socket read: " + line);
                         StateHandler.handleStateJSON(line, this);
-                    } catch(IOException e) {
-                        System.out.println("Couldn't read line from socket! " + e.getMessage());
-                    }
+                    } catch(IOException e) { }
                 }
             });
             socketReader.start();
