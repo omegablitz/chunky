@@ -1,5 +1,6 @@
 package io.github.revalo.ChunkyServer;
 
+import net.minecraft.server.v1_12_R1.RegionFileCache;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,6 +19,7 @@ public class FlusherCommand implements CommandExecutor {
                 Chunk chunk = player.getLocation().getChunk();
                 ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
             } else if(args[0].equals("load")) {
+                RegionFileCache.a();
                 Chunk chunk = player.getLocation().getChunk();
                 ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
             }
