@@ -14,10 +14,10 @@ public class FlusherCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            if (args[0] == "flush") {
+            if (args[0].equals("flush")) {
                 Chunk chunk = player.getLocation().getChunk();
                 ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
-            } else if(args[0] == "load") {
+            } else if(args[0].equals("load")) {
                 player.getLocation().getChunk().unload(false, false);
                 player.getLocation().getChunk().load(false);
             }
