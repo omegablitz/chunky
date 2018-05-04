@@ -12,12 +12,11 @@ public class FlusherCommand implements CommandExecutor {
             Player player = (Player) commandSender;
 
             if (args[1] == "flush") {
-                player.getWorld().unloadChunk((int) player.getLocation().getX(), (int) player.getLocation().getY(),
+                player.getWorld().unloadChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(),
                         true, false);
             } else if(args[1] == "load") {
                 player.getLocation().getChunk().unload(false, false);
                 player.getLocation().getChunk().load(false);
-                player.getWorld().refreshChunk(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
             }
         }
 

@@ -26,8 +26,7 @@ public class SwapCommand implements CommandExecutor {
             Player player = (Player) sender;
             player.sendMessage("You called chunky! Swapping!");
 
-            player.getWorld().save();
-            player.getWorld().unloadChunk((int) player.getLocation().getX(), (int) player.getLocation().getY(),
+            player.getWorld().unloadChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ(),
                                         true, false);
 
             sendStateToProxy(player);
