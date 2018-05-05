@@ -49,3 +49,5 @@ proguard/
 .gradle/
 build/
 bin/
+
+*.swp

@@ -1,7 +1,3 @@
-docker volume rm minecraft_world_playerdata
-docker volume rm minecraft_world_data
-docker volume rm minecraft_world_region
-
 docker volume create minecraft_world_playerdata
 docker volume create minecraft_world_data
 docker volume create minecraft_world_region
