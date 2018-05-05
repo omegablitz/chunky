@@ -15,6 +15,10 @@ class Server(SocketServer.BaseRequestHandler):
         if data['route'] == '/handoff':
             global handoff_cb
             handoff_cb(data, raw)
+            import time
+            time.sleep(0.1)
+
+            self.request.send(json.dumps(data) + '\n')
         else:
             print("NO ROUTE SPECIFIED! req: ", data)
 

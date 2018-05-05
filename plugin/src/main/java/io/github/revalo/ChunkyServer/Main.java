@@ -8,10 +8,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main extends JavaPlugin implements Listener {
@@ -54,7 +58,7 @@ public class Main extends JavaPlugin implements Listener {
                     try {
                         line = in.readLine();
                         System.out.println("Socket read: " + line);
-                        StateHandler.handleStateJSON(line, this);
+                        RPCHandler(line);
                     } catch(IOException e) { }
                 }
             });
@@ -67,7 +71,7 @@ public class Main extends JavaPlugin implements Listener {
 
         this.getCommand("swap").setExecutor(new SwapCommand(out));
         this.getCommand("state").setExecutor(new StateCommand(this));
-        this.getCommand("chunky").setExecutor(new FlusherCommand());
+        this.getCommand("chunky").setExecutor(new FlusherCommand(this));
 
         getServer().getPluginManager().registerEvents(this, this);
     }
@@ -95,6 +99,35 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChunkLoad(ChunkLoadEvent event) {
 
+    }
+
+    public void RPCHandler(String jsonStr) {
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(jsonStr);
+            String route = (String) json.get("route");
+
+            System.out.println(((List<List<Integer>>) json.get("chunks")).get(0));
+
+            switch (route) {
+                case "/handoff":
+                    StateHandler.handleStateJSON(jsonStr, this);
+                    break;
+                case "/loaded":
+                    StateHandler.handleLoaded(this);
+                    break;
+                case "/flush":
+//                    StateHandler.handleFlush(this, );
+                    break;
+                default:
+                    System.out.println("Unknown route " + route);
+            }
+
+        } catch(ParseException e) {
+            System.out.println("JSON Error");
+        } catch (ClassCastException e) {
+            System.out.println("Cast Error");
+        }
     }
 
 }

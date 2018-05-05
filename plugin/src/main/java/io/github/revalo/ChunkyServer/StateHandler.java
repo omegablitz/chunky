@@ -1,14 +1,20 @@
 package io.github.revalo.ChunkyServer;
 
+import net.minecraft.server.v1_12_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StateHandler {
@@ -52,7 +58,43 @@ public class StateHandler {
         }
     }
 
-    private static void updateChunkownership(JSONObject json, Main main) {
-        throw new UnsupportedOperationException("Chunk ownership not implemented yet.");
+    public static void handleLoaded(Main main) {
+        World world = Bukkit.getServer().getWorld("world");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("route", "/loaded");
+
+        List<List<Integer>> chunks = new ArrayList<>();
+
+        for (Chunk chunk : world.getLoadedChunks()) {
+            List<Integer> current = new ArrayList<>();
+            current.add(chunk.getX());
+            current.add(chunk.getZ());
+
+            chunks.add(current);
+        }
+
+        parameters.put("chunks", chunks);
+        JSONObject json = new JSONObject(parameters);
+
+        main.out.println(json.toJSONString());
+    }
+
+    public static void handleFlush(Main main, List<List<Integer>> chunks) {
+        World world = Bukkit.getServer().getWorld("world");
+        WorldServer NMSServer = ((CraftWorld) world).getHandle();
+
+        for (List<Integer> chunkIdx : chunks) {
+            Chunk chunk = world.getChunkAt(chunkIdx.get(0), chunkIdx.get(1));
+            NMSServer.getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
+        }
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("route", "/flush");
+        parameters.put("completed", true);
+
+        JSONObject json = new JSONObject(parameters);
+
+        main.out.println(json.toJSONString());
     }
 }

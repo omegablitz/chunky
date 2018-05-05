@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'io.github.revalo.ChunkyServer'
+version = '1.0.0-SNAPSHOT'
+archivesBaseName = 'ChunkyServerController'
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    compile group: 'org.spigotmc', name: 'spigot', version: '1.12.2'
+    compile group: 'org.spigotmc', name: 'spigot-api', version: '1.12.2-R0.1'
+}

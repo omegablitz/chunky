@@ -169,10 +169,10 @@ def main(argv):
         global_bridge.proxy_switch(global_bridge.SERVERS[global_bridge.current_server][0],
                                    global_bridge.SERVERS[global_bridge.current_server][1])
 
-        import time
-        time.sleep(0.2)
-        global_bridge.upstream.send_packet("chat_message", 
-                global_bridge.write_chat('/state ' + raw, "upstream"))
+        # import time
+        # time.sleep(0.2)
+        # global_bridge.upstream.send_packet("chat_message", 
+        #         global_bridge.write_chat('/state ' + raw, "upstream"))
 
     Server.register_handoff_cb(handoff_hook)
 

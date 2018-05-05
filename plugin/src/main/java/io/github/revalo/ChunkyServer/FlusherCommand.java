@@ -10,6 +10,12 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class FlusherCommand implements CommandExecutor {
+    public Main main;
+
+    public FlusherCommand(Main main) {
+        this.main = main;
+    }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
@@ -22,6 +28,10 @@ public class FlusherCommand implements CommandExecutor {
                 RegionFileCache.a();
                 Chunk chunk = player.getLocation().getChunk();
                 ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
+            } else if (args[0].equals("loaded")) {
+                StateHandler.handleLoaded(main);
+            } else if (args[0].equals("debug")) {
+                main.RPCHandler("{\"chunks\": [[-1, -1], [0, 5]]");
             }
         }
 
