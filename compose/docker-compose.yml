@@ -1,0 +1,42 @@
+version: '3'
+services:
+  slave_1:
+    image: world_slave
+    volumes:
+     - minecraft_world_playerdata:/world/playerdata
+     - minecraft_world_data:/world/data
+     - minecraft_world_region:/world/region
+    ports:
+     - 25565:25565
+    environment:
+     - PROXY_HOST=proxy
+     - PROXY_PORT=4445
+
+  slave_2:
+    image: world_slave
+    volumes:
+     - minecraft_world_playerdata:/world/playerdata
+     - minecraft_world_data:/world/data
+     - minecraft_world_region:/world/region
+    ports:
+     - 25566:25565
+    environment:
+     - PROXY_HOST=proxy
+     - PROXY_PORT=4445
+
+  proxy:
+    image: world_proxy
+    ports:
+     - 4444:4444
+    environment:
+     - SLAVE1_HOST=slave_1
+     - SLAVE2_HOST=slave_2
+
+
+volumes:
+  minecraft_world_playerdata:
+    external: true
+  minecraft_world_data:
+    external: true
+  minecraft_world_region:
+    external: true

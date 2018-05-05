@@ -7,14 +7,14 @@ let localServerOptions = {
 
 let serverList = {
     hub: {
-        host: 'localhost',
+        host: process.env['SLAVE1_HOST'],
         port: 25565,
         isDefault: true,
         isFallback: true
     },
     minigames: {
-        host: 'localhost',
-        port: 25564
+        host: process.env['SLAVE2_HOST'],
+        port: 25565
     }
 }
 
@@ -28,6 +28,13 @@ let proxyOptions = {}
 */
 let proxy = require('./src/createProxy.js')(localServerOptions, serverList, proxyOptions);
 
+let last_logged_id = '0';
+
+proxy.on('login', (stuff) => {
+  console.log(stuff.id + ' logged in');
+  last_logged_id = stuff.id;
+});
+
 proxy.on('error', console.error);
 
 proxy.on('listening', () => {
@@ -37,7 +44,7 @@ proxy.on('listening', () => {
 
 
 var net = require('net');
-var HOST = '127.0.0.1';
+var HOST = '0.0.0.0';
 var PORT = 4445;
 
 // Create a server instance, and chain the listen function to it
@@ -53,11 +60,10 @@ net.createServer(function (sock) {
 
     // Add a 'data' event handler to this instance of socket
     sock.on('data', function (data) {
-        console.log('DATA ' + sock.remoteAddress + ': ' + data);
 
         // Write the data back to the socket, the client will receive it as data from the server
         dat = JSON.parse(data.toString().trim())
-        proxy.setRemoteServer('0', next)
+        proxy.setRemoteServer(last_logged_id, next)
         next = next == "hub" ? "minigames" : "hub";
 
         otherServ = sockLookup[0] == sock ? sockLookup[1] : sockLookup[0];
