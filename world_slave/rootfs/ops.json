@@ -4,5 +4,10 @@
     "name": "Acroblitz",
     "level": 4,
     "bypassesPlayerLimit": false
+  },
+  {
+    "name": "revalo",
+    "level": 4,
+    "bypassesPlayerLimit": false
   }
 ]
