@@ -1,5 +1,6 @@
 package io.github.revalo.ChunkyServer;
 
+import net.minecraft.server.v1_12_R1.RegionFileCache;
 import net.minecraft.server.v1_12_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -91,6 +92,31 @@ public class StateHandler {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("route", "/flush");
+        parameters.put("completed", true);
+
+        JSONObject json = new JSONObject(parameters);
+
+        main.out.println(json.toJSONString());
+    }
+
+    public static void handleLoad(Main main, List<List<Integer>> chunks) {
+        World world = Bukkit.getServer().getWorld("world");
+        WorldServer NMSServer = ((CraftWorld) world).getHandle();
+
+        RegionFileCache.a();
+
+        for (List<Integer> chunkIdx : chunks) {
+            Chunk chunk = world.getChunkAt(chunkIdx.get(0), chunkIdx.get(1));
+
+            net.minecraft.server.v1_12_R1.Chunk NMSChunk = NMSServer.getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
+            net.minecraft.server.v1_12_R1.Chunk PlayerChunk = ((CraftChunk) chunk).getHandle();
+            PlayerChunk.a(NMSChunk.getSections());
+
+            world.refreshChunk(chunk.getX(), chunk.getZ());
+        }
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("route", "/load");
         parameters.put("completed", true);
 
         JSONObject json = new JSONObject(parameters);

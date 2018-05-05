@@ -27,11 +27,14 @@ public class FlusherCommand implements CommandExecutor {
             } else if(args[0].equals("load")) {
                 RegionFileCache.a();
                 Chunk chunk = player.getLocation().getChunk();
-                ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
+                net.minecraft.server.v1_12_R1.Chunk NMSChunk = ((CraftWorld) player.getWorld()).getHandle().getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
+                net.minecraft.server.v1_12_R1.Chunk PlayerChunk = ((CraftChunk) chunk).getHandle();
+                PlayerChunk.a(NMSChunk.getSections());
+                player.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
             } else if (args[0].equals("loaded")) {
                 StateHandler.handleLoaded(main);
             } else if (args[0].equals("debug")) {
-                main.RPCHandler("{\"chunks\": [[-1, -1], [0, 5]]");
+                main.RPCHandler("{\"chunks\": [[-1, -1], [0, 5]]}");
             }
         }
 

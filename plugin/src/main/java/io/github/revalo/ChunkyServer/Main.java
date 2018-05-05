@@ -105,9 +105,8 @@ public class Main extends JavaPlugin implements Listener {
         try {
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(jsonStr);
-            String route = (String) json.get("route");
 
-            System.out.println(((List<List<Integer>>) json.get("chunks")).get(0));
+            String route = (String) json.get("route");
 
             switch (route) {
                 case "/handoff":
@@ -117,7 +116,10 @@ public class Main extends JavaPlugin implements Listener {
                     StateHandler.handleLoaded(this);
                     break;
                 case "/flush":
-//                    StateHandler.handleFlush(this, );
+                    StateHandler.handleFlush(this, (List<List<Integer>>) json.get("chunks"));
+                    break;
+                case "/load":
+                    StateHandler.handleLoad(this, (List<List<Integer>>) json.get("chunks"));
                     break;
                 default:
                     System.out.println("Unknown route " + route);
