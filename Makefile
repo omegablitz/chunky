@@ -6,6 +6,7 @@ clean:
 
 plugin:
 	(cd bukkit && ./gradlew jar)
+	mkdir -p world_slave/rootfs/plugins
 	rm -f world_slave/rootfs/plugins/Chunky*.jar
 	cp bukkit/build/libs/*.jar world_slave/rootfs/plugins
 
