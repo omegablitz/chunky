@@ -61,7 +61,7 @@ public class FlusherCommand implements CommandExecutor {
         World world = Bukkit.getServer().getWorld("world");
 
         for (Chunk chunk : world.getLoadedChunks()) {
-            if (!chunk.unload(true, true)) continue;
+            if (!chunk.unload(false, true)) continue;
         }
     }
 }
