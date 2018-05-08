@@ -17,6 +17,7 @@ import java.net.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends JavaPlugin implements Listener {
     public Socket clientSocket;
@@ -60,7 +61,16 @@ public class Main extends JavaPlugin implements Listener {
                     try {
                         line = in.readLine();
                         System.out.println("Socket read: " + line);
-                        RPCHandler(line);
+
+                        class RPCTask implements Runnable {
+                            String rpc;
+                            RPCTask(String rpc) { this.rpc = rpc; }
+                            public void run() {
+                                RPCHandler(rpc);
+                            }
+                        }
+
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new RPCTask(line), 0);
                     } catch(IOException e) { }
                 }
             });
