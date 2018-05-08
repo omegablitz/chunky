@@ -1,13 +1,19 @@
 package io.github.revalo.ChunkyServer;
 
 import net.minecraft.server.v1_12_R1.RegionFileCache;
+import net.minecraft.server.v1_12_R1.WorldServer;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.plugin.PluginManager;
 
 public class FlusherCommand implements CommandExecutor {
     public Main main;
@@ -35,9 +41,27 @@ public class FlusherCommand implements CommandExecutor {
                 StateHandler.handleLoaded(main);
             } else if (args[0].equals("debug")) {
                 main.RPCHandler("{\"chunks\": [[-1, -1], [0, 5]]}");
+            } else if (args[0].equals("chunks")) {
+                gc();
+                player.sendMessage("Loaded chunk count:" + String.valueOf(getLoadedChunks()));
+            } else if (args[0].equals("gc")) {
+                gc();
+                player.sendMessage("Ran gc");
             }
         }
 
         return true;
+    }
+
+    public int getLoadedChunks() {
+        return Bukkit.getServer().getWorld("world").getLoadedChunks().length;
+    }
+
+    public static void gc() {
+        World world = Bukkit.getServer().getWorld("world");
+
+        for (Chunk chunk : world.getLoadedChunks()) {
+            if (!chunk.unload(true, true)) continue;
+        }
     }
 }

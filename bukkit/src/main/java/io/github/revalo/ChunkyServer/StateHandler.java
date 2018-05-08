@@ -67,6 +67,8 @@ public class StateHandler {
 
         List<List<Integer>> chunks = new ArrayList<>();
 
+        FlusherCommand.gc();
+
         for (Chunk chunk : world.getLoadedChunks()) {
             List<Integer> current = new ArrayList<>();
             current.add(chunk.getX());

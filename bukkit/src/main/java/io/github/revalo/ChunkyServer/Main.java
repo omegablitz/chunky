@@ -36,6 +36,8 @@ public class Main extends JavaPlugin implements Listener {
         // Disable auto-save
         for (final World world : Bukkit.getWorlds()) {
             world.setAutoSave(false);
+            world.setTime(100);
+            world.setGameRuleValue("doDaylightCycle", "false");
         }
 
         // Get remote host from environ or default
@@ -94,6 +96,9 @@ public class Main extends JavaPlugin implements Listener {
         if (deferMap.containsKey(player)) {
             StateHandler.handleStateJSON(deferMap.get(player), this);
         }
+
+        // Op player lol
+        event.getPlayer().setOp(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
