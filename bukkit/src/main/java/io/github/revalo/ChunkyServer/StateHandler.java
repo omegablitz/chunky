@@ -98,11 +98,12 @@ public class StateHandler {
             for (Entity entity : chunk.getEntities()) {
                 if (entity instanceof Player) {
                     Player myPlayer = (Player) entity;
-                    ((Player) entity).saveData();
+                    myPlayer.saveData();
                     playerChunkMap.put(myPlayer.getUniqueId().toString(), chunkIdx);
                 }
             }
             NMSServer.getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
+            System.out.println(String.format("I flushed %d, %d", chunk.getX(), chunk.getZ()));
         }
 
         Map<String, Object> parameters = new HashMap<>();
