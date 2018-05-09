@@ -15,6 +15,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class FlusherCommand implements CommandExecutor {
     public Main main;
 
@@ -38,14 +42,14 @@ public class FlusherCommand implements CommandExecutor {
                 PlayerChunk.a(NMSChunk.getSections());
                 player.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
             } else if (args[0].equals("loaded")) {
-                StateHandler.handleLoaded(main);
+//                StateHandler.handleLoaded(main);
             } else if (args[0].equals("debug")) {
                 main.RPCHandler("{\"chunks\": [[-1, -1], [0, 5]]}");
             } else if (args[0].equals("chunks")) {
-                gc();
+//                gc();
                 player.sendMessage("Loaded chunk count:" + String.valueOf(getLoadedChunks()));
             } else if (args[0].equals("gc")) {
-                gc();
+//                gc();
                 player.sendMessage("Ran gc");
             }
         }
@@ -57,11 +61,16 @@ public class FlusherCommand implements CommandExecutor {
         return Bukkit.getServer().getWorld("world").getLoadedChunks().length;
     }
 
-    public static void gc() {
+    public static void gc(List<List<Number>> ownership) {
         World world = Bukkit.getServer().getWorld("world");
 
+        for (List<Number> chunkIdx : ownership) {
+            Chunk chunk = world.getChunkAt(chunkIdx.get(0).intValue(), chunkIdx.get(1).intValue());
+            chunk.unload(true, true);
+        }
+
         for (Chunk chunk : world.getLoadedChunks()) {
-            if (!chunk.unload(false, true)) continue;
+            chunk.unload(false, true);
         }
     }
 }

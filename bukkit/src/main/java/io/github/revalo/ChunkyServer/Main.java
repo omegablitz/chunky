@@ -129,7 +129,7 @@ public class Main extends JavaPlugin implements Listener {
                     StateHandler.handleStateJSON(jsonStr, this);
                     break;
                 case "/loaded":
-                    StateHandler.handleLoaded(this);
+                    StateHandler.handleLoaded(this, (List<List<Number>>) json.get("owned"));
                     break;
                 case "/flush":
                     StateHandler.handleFlush(this, (List<List<Number>>) json.get("chunks"), (String) json.get("id"));

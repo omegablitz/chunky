@@ -60,7 +60,7 @@ public class StateHandler {
         }
     }
 
-    public static void handleLoaded(Main main) {
+    public static void handleLoaded(Main main, List<List<Number>> ownership) {
         World world = Bukkit.getServer().getWorld("world");
 
         Map<String, Object> parameters = new HashMap<>();
@@ -68,7 +68,7 @@ public class StateHandler {
 
         List<List<Integer>> chunks = new ArrayList<>();
 
-        FlusherCommand.gc();
+        FlusherCommand.gc(ownership);
 
         for (Chunk chunk : world.getLoadedChunks()) {
             List<Integer> current = new ArrayList<>();
