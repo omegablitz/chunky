@@ -120,6 +120,8 @@ class Clusters {
                 break;
             }
             serverAssignments[minChunkServer].blobs.push(serverAssignments[maxChunkServer].blobs.pop());
+            serverAssignments[minChunkServer].numChunks += maxChunkLastBlobSize;
+            serverAssignments[maxChunkServer].numChunks -= maxChunkLastBlobSize;
         }
         return serverAssignments;
     }
@@ -139,7 +141,6 @@ class Clusters {
                             // do nothing, we already own it
                         } else {
                             // we don't own the chunk, transfer ownership
-                            console.log(chunkKey + ' owned by ' + previousOwner);
                             const key = {
                                 from: previousOwner,
                                 to: server,

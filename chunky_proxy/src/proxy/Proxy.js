@@ -67,7 +67,8 @@ class Proxy extends mc.Server {
     newLocalClient.on('error', (err) => {
       this.emit('playerMoveFailed', err, remoteClientId, oldServerName, newServerName)
       this.emit('error', err)
-      this.fallback(remoteClientId)
+      console.error(err);
+      // this.fallback(remoteClientId)
     })
 
     if (!remoteClient.isFirstConnection) {
@@ -92,6 +93,7 @@ class Proxy extends mc.Server {
    * @param {number} remoteClientId The ID of the player to move
    */
   fallback (remoteClientId) {
+    return;
     let oldServerName = this.clients[remoteClientId].currentServer
     let fallbackServerName = this.getFallbackServerName()
     this.emit('playerFallback', remoteClientId, oldServerName, fallbackServerName)
