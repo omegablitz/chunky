@@ -131,7 +131,7 @@ public class Main extends JavaPlugin implements Listener {
                     StateHandler.handleLoaded(this);
                     break;
                 case "/flush":
-                    StateHandler.handleFlush(this, (List<List<Number>>) json.get("chunks"));
+                    StateHandler.handleFlush(this, (List<List<Number>>) json.get("chunks"), (String) json.get("id"));
                     break;
                 case "/load":
                     StateHandler.handleLoad(this, (List<List<Number>>) json.get("chunks"));

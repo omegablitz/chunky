@@ -84,7 +84,7 @@ public class StateHandler {
         main.out.println(json.toJSONString());
     }
 
-    public static void handleFlush(Main main, List<List<Number>> chunks) {
+    public static void handleFlush(Main main, List<List<Number>> chunks, String id) {
         System.out.println(String.format("Flush chunks got: %d", chunks.size()));
 
         World world = Bukkit.getServer().getWorld("world");
@@ -107,6 +107,7 @@ public class StateHandler {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("route", "/flush");
         parameters.put("completed", true);
+        parameters.put("id", id);
         parameters.put("players", playerChunkMap);
 
         JSONObject json = new JSONObject(parameters);
