@@ -64,21 +64,32 @@ public class StateHandler {
         World world = Bukkit.getServer().getWorld("world");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("route", "/loaded");
 
-        List<List<Integer>> chunks = new ArrayList<>();
+        List<List<Number>> chunks = new ArrayList<>();
+        Map<String, List<Number>> playerChunkMap = new HashMap<>();
 
         FlusherCommand.gc(ownership);
 
         for (Chunk chunk : world.getLoadedChunks()) {
-            List<Integer> current = new ArrayList<>();
+            List<Number> current = new ArrayList<>();
+
             current.add(chunk.getX());
             current.add(chunk.getZ());
+
+            for (Entity entity : chunk.getEntities()) {
+                if (entity instanceof Player) {
+                    Player myPlayer = (Player) entity;
+                    myPlayer.saveData();
+                    playerChunkMap.put(myPlayer.getUniqueId().toString(), current);
+                }
+            }
 
             chunks.add(current);
         }
 
+        parameters.put("route", "/loaded");
         parameters.put("chunks", chunks);
+        parameters.put("players", playerChunkMap);
         JSONObject json = new JSONObject(parameters);
 
         main.out.println(json.toJSONString());
