@@ -30,6 +30,6 @@ proxy:
 run:
 	(cd compose && docker-compose up)
 
-all: world slave proxy run
+all: world plugin slave proxy run
 
 fresh: clean all

@@ -60,6 +60,7 @@ public class Main extends JavaPlugin implements Listener {
                 while (clientSocket.isConnected()) {
                     try {
                         line = in.readLine();
+                        if (line == null) throw new RuntimeException("null sock recv");
                         System.out.println("Socket read: " + line);
 
                         class RPCTask implements Runnable {

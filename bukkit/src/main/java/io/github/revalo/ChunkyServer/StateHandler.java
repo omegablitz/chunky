@@ -98,6 +98,7 @@ public class StateHandler {
             for (Entity entity : chunk.getEntities()) {
                 if (entity instanceof Player) {
                     Player myPlayer = (Player) entity;
+                    ((Player) entity).saveData();
                     playerChunkMap.put(myPlayer.getUniqueId().toString(), chunkIdx);
                 }
             }
