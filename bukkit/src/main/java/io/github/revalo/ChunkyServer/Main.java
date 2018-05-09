@@ -131,10 +131,10 @@ public class Main extends JavaPlugin implements Listener {
                     StateHandler.handleLoaded(this);
                     break;
                 case "/flush":
-                    StateHandler.handleFlush(this, (List<List<Integer>>) json.get("chunks"));
+                    StateHandler.handleFlush(this, (List<List<Number>>) json.get("chunks"));
                     break;
                 case "/load":
-                    StateHandler.handleLoad(this, (List<List<Integer>>) json.get("chunks"));
+                    StateHandler.handleLoad(this, (List<List<Number>>) json.get("chunks"));
                     break;
                 default:
                     System.out.println("Unknown route " + route);

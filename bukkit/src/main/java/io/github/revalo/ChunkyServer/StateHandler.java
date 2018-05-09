@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -83,32 +84,44 @@ public class StateHandler {
         main.out.println(json.toJSONString());
     }
 
-    public static void handleFlush(Main main, List<List<Integer>> chunks) {
+    public static void handleFlush(Main main, List<List<Number>> chunks) {
+        System.out.println(String.format("Flush chunks got: %d", chunks.size()));
+
         World world = Bukkit.getServer().getWorld("world");
         WorldServer NMSServer = ((CraftWorld) world).getHandle();
 
-        for (List<Integer> chunkIdx : chunks) {
-            Chunk chunk = world.getChunkAt(chunkIdx.get(0), chunkIdx.get(1));
+        Map<String, List<Number>> playerChunkMap = new HashMap<>();
+
+
+        for (List<Number> chunkIdx : chunks) {
+            Chunk chunk = world.getChunkAt(chunkIdx.get(0).intValue(), chunkIdx.get(1).intValue());
+            for (Entity entity : chunk.getEntities()) {
+                if (entity instanceof Player) {
+                    Player myPlayer = (Player) entity;
+                    playerChunkMap.put(myPlayer.getUniqueId().toString(), chunkIdx);
+                }
+            }
             NMSServer.getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
         }
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("route", "/flush");
         parameters.put("completed", true);
+        parameters.put("players", playerChunkMap);
 
         JSONObject json = new JSONObject(parameters);
 
         main.out.println(json.toJSONString());
     }
 
-    public static void handleLoad(Main main, List<List<Integer>> chunks) {
+    public static void handleLoad(Main main, List<List<Number>> chunks) {
         World world = Bukkit.getServer().getWorld("world");
         WorldServer NMSServer = ((CraftWorld) world).getHandle();
 
         RegionFileCache.a();
 
-        for (List<Integer> chunkIdx : chunks) {
-            Chunk chunk = world.getChunkAt(chunkIdx.get(0), chunkIdx.get(1));
+        for (List<Number> chunkIdx : chunks) {
+            Chunk chunk = world.getChunkAt(chunkIdx.get(0).intValue(), chunkIdx.get(1).intValue());
 
             net.minecraft.server.v1_12_R1.Chunk NMSChunk = NMSServer.getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
             net.minecraft.server.v1_12_R1.Chunk PlayerChunk = ((CraftChunk) chunk).getHandle();
