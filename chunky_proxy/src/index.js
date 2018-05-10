@@ -164,7 +164,7 @@ const swapPlayers = function () {
 
             if (player.server !== chunkOwner) {
                 console.log('swapping', player.name, 'to correct server', serverSlaveMap[chunkOwner.split(':')[0]]);
-                setTimeout(function (){proxy.setRemoteServer(playerMap[player.uuid].id, chunkOwner)}, 100);
+                proxy.setRemoteServer(playerMap[player.uuid].id, chunkOwner);
             }
         }
     }
@@ -224,7 +224,7 @@ const cycleTransfer = function () {
         setTimeout(() => {
             swapPlayers();
             setTimeout(startCycle, 1000);
-        }, 2000);
+        }, 100);
     }
 }
 

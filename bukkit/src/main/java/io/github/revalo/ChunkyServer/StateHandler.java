@@ -103,6 +103,8 @@ public class StateHandler {
 
         Map<String, List<Number>> playerChunkMap = new HashMap<>();
 
+        RegionFileCache.a();
+
         for (List<Number> chunkIdx : chunks) {
             Chunk chunk = world.getChunkAt(chunkIdx.get(0).intValue(), chunkIdx.get(1).intValue());
             for (Entity entity : chunk.getEntities()) {
@@ -113,7 +115,7 @@ public class StateHandler {
                 }
             }
             NMSServer.getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
-//            System.out.println(String.format("I flushed %d, %d", chunk.getX(), chunk.getZ()));
+            System.out.println(String.format("I flushed %d, %d", chunk.getX(), chunk.getZ()));
         }
 
         Map<String, Object> parameters = new HashMap<>();
