@@ -61,7 +61,7 @@ public class Main extends JavaPlugin implements Listener {
                     try {
                         line = in.readLine();
                         if (line == null) throw new RuntimeException("null sock recv");
-                        System.out.println("Socket read: " + line);
+//                        System.out.println("Socket read: " + line);
 
                         class RPCTask implements Runnable {
                             String rpc;

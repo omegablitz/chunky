@@ -45,16 +45,23 @@ class Proxy extends mc.Server {
    * @param {string} newServerName The name of the server where the player should be moved
    */
   setRemoteServer (remoteClientId, newServerName) {
-    let remoteClient = this.clients[remoteClientId]
+    console.log("Init swap remoteID", remoteClientId, "server name", newServerName);
 
-    let oldServerName = remoteClient.currentServer
-    let newServer = this.serverList[newServerName]
+    let remoteClient = this.clients[remoteClientId];
 
-    if (remoteClient.currentServer === newServerName) return
+    let oldServerName = remoteClient.currentServer;
+    let newServer = this.serverList[newServerName];
 
-    this.emit('playerMoving', remoteClientId, oldServerName, newServerName)
+    console.log("remote client server", remoteClient.currentServer);
 
-    this.clients[remoteClientId].currentServer = newServerName
+    console.log("left", remoteClient.currentServer, "right", newServerName, "equal", remoteClient.currentServer === newServerName);
+
+    if (remoteClient.currentServer === newServerName) return;
+
+    this.emit('playerMoving', remoteClientId, oldServerName, newServerName);
+    console.log("Moving player.");
+
+    this.clients[remoteClientId].currentServer = newServerName;
 
     let newLocalClient = mc.createClient({
       host: newServer.host,
@@ -62,14 +69,16 @@ class Proxy extends mc.Server {
       username: remoteClient.username,
       keepAlive: false, // keep alive is set to false because the remote server will send the packets and the remote client will respond
       version: remoteClient.version
-    })
+    });
 
     newLocalClient.on('error', (err) => {
       this.emit('playerMoveFailed', err, remoteClientId, oldServerName, newServerName)
       this.emit('error', err)
-      console.error(err);
+      console.error("Move Error:", err);
       // this.fallback(remoteClientId)
-    })
+    });
+
+    console.log("New client now!");
 
     if (!remoteClient.isFirstConnection) {
       replayPackets(remoteClient, newLocalClient, () => {
@@ -86,6 +95,7 @@ class Proxy extends mc.Server {
     }
 
     this.emit('playerMoved', remoteClientId, oldServerName, newServerName)
+    console.log("Player moved");
   }
 
   /**

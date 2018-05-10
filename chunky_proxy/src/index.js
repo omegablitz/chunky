@@ -1,6 +1,7 @@
 const util = require('./util.js');
 const createProxy = require('./proxy/createProxy.js');
 const Clusters = require('./clusters.js');
+const dns = require('dns');
 
 const localServerOptions = {
     'port': '4444',
@@ -52,6 +53,22 @@ const flushData = {}
 const NUM_SERVERS = 2;
 let serversLoaded = 0;
 
+let flushesAsked = 0;
+let flushesDone = 0;
+
+const aggPlayers = {};
+
+const serverSlaveMap = {};
+const PRE = ["slave_1", "slave_2"];
+
+dns.lookup(PRE[0], function(err, hn) {
+    serverSlaveMap[hn] = PRE[0];
+});
+
+dns.lookup(PRE[1], function(err, hn) {
+    serverSlaveMap[hn] = PRE[1];
+});
+
 net.createServer(function (sock) {
     const host = sock.remoteAddress + ':' + sock.remotePort;
     proxyServers[host] = {
@@ -65,7 +82,6 @@ net.createServer(function (sock) {
         startCycle();
     }
 
-
     console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
     console.log('new proxyServers: ' + JSON.stringify(proxyServers));
 
@@ -75,39 +91,57 @@ net.createServer(function (sock) {
         }
     }
 
-
     util.emitLines(sock);
     sock.on('line', function (line) {
         const data = JSON.parse(line.toString().trim())
         switch (data.route) {
             case '/loaded':
                 clusters.updateLoaded(host, data.chunks);
+                // console.log("DATA", JSON.stringify(data));
+                for (let uuid in data.players) {
+                    aggPlayers[uuid] = {
+                        uuid: uuid,
+                        name: playerMap[uuid].username,
+                        chunk: data.players[uuid],
+                        server: host,
+                    };
+                }
                 serversLoaded++;
                 if (serversLoaded == Object.keys(proxyServers).length) {
                     serversLoaded = 0;
                     cycleTransfer();
-                    setTimeout(startCycle, 1000);
                 }
-                swapPlayers(host, data.players);
                 break;
             case '/flush':
+                // Get transaction
                 const txn = flushData[data.id];
-                setTimeout(function() {
 
-                serverData[txn.to].sock.write(JSON.stringify({
-                    route: '/load',
-                    chunks: txn.chunks,
-                }) + '\n');
+                // Call load
+                setTimeout(function() {
+                    serverData[txn.to].sock.write(JSON.stringify({
+                        route: '/load',
+                        chunks: txn.chunks,
+                    }) + '\n');
                 }, 500);
+
+                // Update ownership
                 for (let chunk of txn.chunks) {
                     chunkState.removeOwner(chunk[0], chunk[1]);
                     chunkState.setOwner(chunk[0], chunk[1], txn.to);
                 }
-                for (let uuid in data.players) {
-                    // TODO swap
-                    proxy.setRemoteServer(playerMap[uuid].id, txn.to);
-                }
+
+                // Clean transaction
                 delete flushData[data.id];
+                flushesDone++;
+                
+                // After all flushes are complete, ask
+                // to figure out player swaps
+                if (flushesDone == flushesAsked) {
+                    flushesDone = 0;
+                    swapPlayers();
+                    setTimeout(startCycle, 1000);
+                }
+
                 break;
         }
     });
@@ -118,19 +152,25 @@ net.createServer(function (sock) {
 
 }).listen(PORT, HOST);
 
-const swapPlayers = function (server, players) {
-    for (let player in players) {
-        const chunk = players[player];
-        console.log(server, 'checking if chunk is owned');
+const swapPlayers = function () {
+    for (let uuid in aggPlayers) {
+        const player = aggPlayers[uuid];
+        const chunk = player.chunk;
+
         if (chunkState.isOwned(chunk[0], chunk[1])) {
             const chunkOwner = chunkState.getOwner(chunk[0], chunk[1]);
-        console.log('chunk is owned by', chunkOwner, 'i-am', server);
-            if (server !== chunkOwner) {
-                console.log('swapping', player, 'to correct server');
-                // swap
-                proxy.setRemoteServer(playerMap[player].id, chunkOwner);
+
+            console.log("Player", player.name, "is on", serverSlaveMap[player.server.split(':')[0]], "chunk owner is", serverSlaveMap[chunkOwner.split(':')[0]])
+
+            if (player.server !== chunkOwner) {
+                console.log('swapping', player.name, 'to correct server', serverSlaveMap[chunkOwner.split(':')[0]]);
+                setTimeout(function (){proxy.setRemoteServer(playerMap[player.uuid].id, chunkOwner)}, 100);
             }
         }
+    }
+
+    for (let uuid of Object.keys(aggPlayers)) {
+        delete aggPlayers[uuid];
     }
 }
 
@@ -151,6 +191,12 @@ const cycleTransfer = function () {
     const transfers = clusters.getTransfers(Object.keys(proxyServers));
     //if (Object.keys(transfers).length > 0)
     //    console.log('transfers', JSON.stringify(transfers));
+    flushesAsked = Object.keys(transfers).length;
+
+    if (flushesAsked !== 0) {
+        console.log("Trasnfers", JSON.stringify(transfers));
+    }
+
     for (let transfer of Object.values(transfers)) {
         const from = transfer.from;
         const to = transfer.to;
@@ -171,6 +217,14 @@ const cycleTransfer = function () {
             chunks: chunks,
             id: id,
         }) + '\n');
+    }
+
+    // No flushes were asked, we swap players anyway
+    if (flushesAsked === 0) {
+        setTimeout(() => {
+            swapPlayers();
+            setTimeout(startCycle, 1000);
+        }, 2000);
     }
 }
 
