@@ -1,7 +1,11 @@
 package io.github.revalo.ChunkyServer;
 
+import net.minecraft.server.v1_12_R1.WorldServer;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,6 +51,16 @@ public class Main extends JavaPlugin implements Listener {
 
         String portStr = System.getenv("PROXY_PORT");
         PORT = portStr == null ? 4445 : Integer.parseInt(portStr);
+
+        World world = Bukkit.getWorld("world");
+        WorldServer NMSServer = ((CraftWorld) world).getHandle();
+        //for(int x = -32; x < 32; x++) {
+        //    for(int z = -32; z < 32; z++) {
+        //        world.loadChunk(x, z);
+        //        Chunk chunk = world.getChunkAt(x, z);
+        //        NMSServer.getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
+        //    }
+        //}
 
         try {
             clientSocket = new Socket(REMOTE, PORT);

@@ -1,5 +1,6 @@
 package io.github.revalo.ChunkyServer;
 
+import net.minecraft.server.v1_12_R1.ChunkSection;
 import net.minecraft.server.v1_12_R1.RegionFileCache;
 import net.minecraft.server.v1_12_R1.WorldServer;
 import org.bukkit.Bukkit;
@@ -115,9 +116,9 @@ public class StateHandler {
                 }
             }
             NMSServer.getChunkProviderServer().saveChunk(((CraftChunk) chunk).getHandle(), false);
-            System.out.println(String.format("I flushed %d, %d", chunk.getX(), chunk.getZ()));
+//            System.out.println(String.format("I flushed %d, %d", chunk.getX(), chunk.getZ()));
         }
-
+        NMSServer.getChunkProviderServer().c();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("route", "/flush");
         parameters.put("completed", true);
@@ -140,7 +141,10 @@ public class StateHandler {
 
             net.minecraft.server.v1_12_R1.Chunk NMSChunk = NMSServer.getChunkProviderServer().loadChunk(chunk.getX(), chunk.getZ());
             net.minecraft.server.v1_12_R1.Chunk PlayerChunk = ((CraftChunk) chunk).getHandle();
-            PlayerChunk.a(NMSChunk.getSections());
+            ChunkSection[] sections = NMSChunk.getSections();
+            if (sections != null) {
+                PlayerChunk.a(NMSChunk.getSections());
+            }
 
             world.refreshChunk(chunk.getX(), chunk.getZ());
         }

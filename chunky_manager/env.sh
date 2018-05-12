@@ -1,0 +1,1 @@
+GOPATH=`pwd`/go:$GOPATH

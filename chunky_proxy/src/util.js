@@ -33,21 +33,8 @@ function getAnyKey (obj) {
   return keys[0];
 }
 
-function getNeighboring(chunk) {
-  const out = []
-  for (let x = -1; x <= 1; x++) {
-    for (let y = -1; y <= 1; y++) {
-      if (x == 0 && y == 0) continue;
-      out.push([chunk[0] + x, chunk[1] + y]);
-    }
-  }
-  return out;
-}
-
-
 module.exports = {
   emitLines,
   randomKey,
-  getNeighboring,
   getAnyKey,
 }

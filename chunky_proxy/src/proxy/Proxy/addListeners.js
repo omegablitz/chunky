@@ -17,11 +17,12 @@ function addListeners (remoteClient, that) {
   })
 
   remoteClient.localClient.on('kick_disconnect', (data, metadata) => {
-    if (that.getFallbackServerName() === remoteClient.currentServer) {
-      remoteClient.write(metadata.name, data)
-    } else {
-      that.fallback(remoteClient.id)
-    }
+    that.setRemoteServer(remoteClient.id, remoteClient.currentServer);
+    //if (that.getFallbackServerName() === remoteClient.currentServer) {
+    //  remoteClient.write(metadata.name, data)
+    //} else {
+    //  that.fallback(remoteClient.id)
+    //}
   })
 }
 

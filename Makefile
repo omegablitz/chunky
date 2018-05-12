@@ -10,6 +10,7 @@ clean:
 	(cd bukkit && $(GRADLE) clean)
 	(cd world_slave && ./clean.sh)
 	(cd chunky_proxy && ./clean.sh)
+	(cd chunky_manager && ./clean.sh)
 	(cd world_host && ./clean.sh)
 
 plugin:
@@ -17,6 +18,9 @@ plugin:
 	mkdir -p world_slave/rootfs/plugins
 	rm -f world_slave/rootfs/plugins/Chunky*.jar
 	cp bukkit/build/libs/*.jar world_slave/rootfs/plugins
+
+manager:
+	(cd chunky_manager && ./build.sh)
 
 world:
 	(cd world_host && ./create.sh)
@@ -30,6 +34,6 @@ proxy:
 run:
 	(cd compose && docker-compose up)
 
-all: world plugin slave proxy run
+all: world plugin slave proxy manager run
 
 fresh: clean all

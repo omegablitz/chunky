@@ -5,7 +5,7 @@ var id = parseInt(process.argv[2]);
 
 get_random = function (list) {
     return list[Math.floor((Math.random()*list.length))];
-  } 
+  }
 
 var bot = mineflayer.createBot({
   host: config.server,
@@ -15,7 +15,9 @@ var bot = mineflayer.createBot({
 });
 
 bot.on('spawn', function() {
+  setTimeout(function() {
     bot.chat('login');
+  }, 5000);
 });
 
 bot.on('chat', function(username, message) {

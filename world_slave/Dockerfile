@@ -3,6 +3,6 @@ COPY rootfs /
 
 WORKDIR /
 #CMD ["bash", "launch.sh"]
-CMD ["java", "-jar", "spigot.jar"]
+CMD ["java", "-DIReallyKnowWhatIAmDoingISwear", "-jar", "spigot.jar", "nogui", "--noconsole"]
 
 EXPOSE 25565
