@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'io.github.revalo.ChunkyProxy'
+version = '1.0.0-SNAPSHOT'
+archivesBaseName = 'ChunkyProxyShim'
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    compile group: 'net.md-5', name: 'bungeecord', version: '1.12.2'
+}
+

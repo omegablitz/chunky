@@ -22,7 +22,7 @@ func main() {
 	go func() {
 		for {
 			tick(players, servers, clusters, &loaded, &transfered)
-			time.Sleep(2000 * time.Millisecond)
+			time.Sleep(500 * time.Millisecond)
 		}
 	}()
 	go proxyManager(players, servers)

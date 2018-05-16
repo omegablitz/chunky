@@ -41,7 +41,7 @@ services:
   #  image: chunky_manager
 
   proxy:
-    image: world_proxy
+    image: bungee
     ports:
      - 4444:4444
     environment:

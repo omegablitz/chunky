@@ -1,0 +1,4 @@
+name: ChunkyBungeeShim
+main: io.github.revalo.ChunkyProxy.Main
+version: 1.0
+author: Shreyas Kapur + Aashish Welling

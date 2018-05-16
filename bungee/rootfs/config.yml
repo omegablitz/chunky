@@ -1,0 +1,34 @@
+forge_support: false
+player_limit: -1
+permissions:
+  default:
+  - bungeecord.command.server
+  - bungeecord.command.list
+  admin:
+  - bungeecord.command.alert
+  - bungeecord.command.end
+  - bungeecord.command.ip
+  - bungeecord.command.reload
+timeout: 30000
+log_commands: false
+online_mode: false
+disabled_commands:
+- disabledcommandhere
+listeners:
+- query_port: 4444
+  motd: 'Chunky proxy!'
+  tab_list: GLOBAL_PING
+  priorities: []
+  query_enabled: false
+  proxy_protocol: false
+  ping_passthrough: false
+  bind_local_address: true
+  host: 0.0.0.0:4444
+  max_players: 1
+  tab_size: 60
+  force_default_server: false
+ip_forward: false
+network_compression_threshold: 256
+connection_throttle: -1
+stats: 3c518bb4-4be7-4a84-80c9-0deb0d2dfea7
+prevent_proxy_connections: false
