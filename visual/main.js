@@ -160,6 +160,9 @@ function drawChunk(chunkX, chunkY) {
     var viewY = cameraObjY + centerY;
 
     context.fillRect(viewX, viewY, tileSize, tileSize);
+
+    context.strokeStyle = "black";
+    context.strokeRect(viewX, viewY, tileSize, tileSize);
 }
 
 let down = false;
