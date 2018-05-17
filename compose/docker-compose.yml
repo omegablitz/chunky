@@ -25,6 +25,8 @@ services:
      - PROXY_PORT=4441
   manager:
     image: chunky_manager
+    ports:
+      - 8080:8080
 
   #slave_3:
   #  image: world_slave

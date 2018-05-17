@@ -27,7 +27,7 @@ listeners:
   max_players: 1
   tab_size: 60
   force_default_server: false
-ip_forward: false
+ip_forward: true
 network_compression_threshold: 256
 connection_throttle: -1
 stats: 3c518bb4-4be7-4a84-80c9-0deb0d2dfea7

@@ -14,6 +14,7 @@ func main() {
 	players := NewPlayerState()
 	servers := NewServerState()
 	clusters := NewClusters()
+	go SetupEndpoint(clusters)
 
 	// we don't technically need two, but this makes it easier to read
 	var loaded sync.WaitGroup

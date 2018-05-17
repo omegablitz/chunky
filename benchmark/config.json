@@ -1,5 +1,5 @@
 {
-    "server": "localhost",
+    "server": "192.168.99.100",
     "port": 4444,
     "num_players": 4,
     "spread_distance": 100,
