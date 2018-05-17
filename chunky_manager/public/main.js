@@ -20,7 +20,7 @@ var canvas = $('#canvas');
 var context = canvas[0].getContext('2d');
 var win = $(window);
 
-let endpoint = "http://192.168.99.100:8080/chunks";
+let endpoint = "http://" + window.location.hostname + ":8080/chunks";
 
 /**
  *   Resizes canvas to match window width and height

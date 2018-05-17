@@ -8,6 +8,11 @@ import (
 )
 
 func SetupEndpoint(state *clusters) {
+	fs := http.FileServer(http.Dir("public"))
+	http.Handle("/", fs)
+
+	go http.ListenAndServe(":80", nil)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/chunks", func(w http.ResponseWriter, r *http.Request) {
 		state.Lock()
