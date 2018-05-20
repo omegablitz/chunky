@@ -9,7 +9,7 @@ Our full report and design can be found [here](https://github.com/omegablitz/chu
 <br />
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/omegablitz/chunky/master/system-diagram.png" alt="chunky-system-diagram" style="width: 400px;"/>
+<img src="https://raw.githubusercontent.com/omegablitz/chunky/master/system-diagram.png" alt="chunky-system-diagram" width="400" />
 </p>
 
 ## Running
