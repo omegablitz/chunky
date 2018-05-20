@@ -14,6 +14,7 @@ func main() {
 	players := NewPlayerState()
 	servers := NewServerState()
 	clusters := NewClusters()
+	go SetupEndpoint(clusters)
 
 	// we don't technically need two, but this makes it easier to read
 	var loaded sync.WaitGroup
@@ -22,7 +23,7 @@ func main() {
 	go func() {
 		for {
 			tick(players, servers, clusters, &loaded, &transfered)
-			time.Sleep(2000 * time.Millisecond)
+			time.Sleep(500 * time.Millisecond)
 		}
 	}()
 	go proxyManager(players, servers)

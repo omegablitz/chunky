@@ -12,6 +12,7 @@ var bot = mineflayer.createBot({
   port: config.port,
   username: "benchmark_bot_" + id,
   verbose: true,
+  version: "1.12"
 });
 
 bot.on('spawn', function() {

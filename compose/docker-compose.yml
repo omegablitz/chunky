@@ -25,6 +25,9 @@ services:
      - PROXY_PORT=4441
   manager:
     image: chunky_manager
+    ports:
+      - 8080:8080
+      - 80:80
 
   #slave_3:
   #  image: world_slave
@@ -41,7 +44,7 @@ services:
   #  image: chunky_manager
 
   proxy:
-    image: world_proxy
+    image: bungee
     ports:
      - 4444:4444
     environment:

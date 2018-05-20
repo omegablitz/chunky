@@ -19,6 +19,13 @@ plugin:
 	rm -f world_slave/rootfs/plugins/Chunky*.jar
 	cp bukkit/build/libs/*.jar world_slave/rootfs/plugins
 
+proxy:
+	(cd bungee_plugin && $(GRADLE) jar)
+	mkdir -p bungee/rootfs/plugins
+	rm -f bungee/rootfs/plugins/Chunky*.jar
+	cp bungee_plugin/build/libs/*.jar bungee/rootfs/plugins
+	(cd bungee && ./build.sh)
+
 manager:
 	(cd chunky_manager && ./build.sh)
 
@@ -28,8 +35,8 @@ world:
 slave:
 	(cd world_slave && ./build.sh)
 
-proxy:
-	(cd chunky_proxy && ./build.sh)
+#proxy:
+#	(cd chunky_proxy && ./build.sh)
 
 run:
 	(cd compose && docker-compose up)
