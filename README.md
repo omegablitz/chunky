@@ -6,7 +6,11 @@ This repository contains the core Chunky library as well as an example of using 
 
 Our full report and design can be found [here](https://github.com/omegablitz/chunky/raw/master/report.pdf).
 
-![chunky-system-diagram](https://raw.githubusercontent.com/omegablitz/chunky/master/system-diagram.png)
+<br />
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/omegablitz/chunky/master/system-diagram.png" alt="chunky-system-diagram" style="width: 400px;"/>
+</p>
 
 ## Running
 
