@@ -1,5 +1,9 @@
 # Chunky
 
+_Demo Video:_
+
+[![Demo Video](https://img.youtube.com/vi/ckb5a2Dy0RY/0.jpg)](https://www.youtube.com/watch?v=ckb5a2Dy0RY)
+
 Chunky is a distributed game framework that allows multiple game servers to be strung together to create a single seamless dynamic world.
 
 This repository contains the core Chunky library as well as an example of using Chunky to run a distributed Minecraft Server (using Bungeecord and Spigot as backends).
