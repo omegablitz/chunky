@@ -6,6 +6,8 @@ chunkserver/
 patch/
 node_modules
 
+.settings/
+
 # Java stuff
 *.war
 *.nar

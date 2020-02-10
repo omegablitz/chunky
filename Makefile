@@ -35,9 +35,6 @@ world:
 slave:
 	(cd world_slave && ./build.sh)
 
-#proxy:
-#	(cd chunky_proxy && ./build.sh)
-
 run:
 	(cd compose && docker-compose up)
 
