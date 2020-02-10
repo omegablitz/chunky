@@ -1,7 +1,7 @@
 version: '3'
 services:
   slave_1:
-    image: world_slave
+    image: slave
     volumes:
      - minecraft_world_playerdata:/world/playerdata
      - minecraft_world_data:/world/data
@@ -13,7 +13,7 @@ services:
      - PROXY_PORT=4441
 
   slave_2:
-    image: world_slave
+    image: slave
     volumes:
      - minecraft_world_playerdata:/world/playerdata
      - minecraft_world_data:/world/data
@@ -24,13 +24,13 @@ services:
      - PROXY_HOST=manager
      - PROXY_PORT=4441
   manager:
-    image: chunky_manager
+    image: manager
     ports:
       - 8080:8080
       - 80:80
 
   #slave_3:
-  #  image: world_slave
+  #  image: slave
   #  volumes:
   #   - minecraft_world_playerdata:/world/playerdata
   #   - minecraft_world_data:/world/data
@@ -41,7 +41,7 @@ services:
   #   - PROXY_HOST=manager
   #   - PROXY_PORT=4441
   #manager:
-  #  image: chunky_manager
+  #  image: manager
 
   proxy:
     image: bungee

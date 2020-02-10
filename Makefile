@@ -6,19 +6,22 @@ else
 	GRADLE := ./gradlew
 endif
 
+.PHONY: clean
 clean:
 	(cd bukkit && $(GRADLE) clean)
-	(cd world_slave && ./clean.sh)
-	(cd chunky_proxy && ./clean.sh)
-	(cd chunky_manager && ./clean.sh)
-	(cd world_host && ./clean.sh)
+	(cd slave && ./clean.sh)
+	(cd bungee_plugin && $(GRADLE) clean)
+	(cd manager && ./clean.sh)
+	(cd world && ./clean.sh)
 
+.PHONY: plugin
 plugin:
 	(cd bukkit && $(GRADLE) jar)
-	mkdir -p world_slave/rootfs/plugins
-	rm -f world_slave/rootfs/plugins/Chunky*.jar
-	cp bukkit/build/libs/*.jar world_slave/rootfs/plugins
+	mkdir -p slave/rootfs/plugins
+	rm -f slave/rootfs/plugins/Chunky*.jar
+	cp bukkit/build/libs/*.jar slave/rootfs/plugins
 
+.PHONY: proxy
 proxy:
 	(cd bungee_plugin && $(GRADLE) jar)
 	mkdir -p bungee/rootfs/plugins
@@ -26,18 +29,24 @@ proxy:
 	cp bungee_plugin/build/libs/*.jar bungee/rootfs/plugins
 	(cd bungee && ./build.sh)
 
+.PHONY: manager
 manager:
-	(cd chunky_manager && ./build.sh)
+	(cd manager && ./build.sh)
 
+.PHONY: world
 world:
-	(cd world_host && ./create.sh)
+	(cd world && ./create.sh)
 
+.PHONY: slave
 slave:
-	(cd world_slave && ./build.sh)
+	(cd slave && ./build.sh)
 
+.PHONY: run
 run:
 	(cd compose && docker-compose up)
 
+.PHONY: all
 all: world plugin slave proxy manager run
 
+.PHONY: fresh
 fresh: clean all

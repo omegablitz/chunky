@@ -1,7 +1,7 @@
 FROM golang:1.8
 
 WORKDIR /go/src/app
-COPY go/src/github.com/omegablitz/chunky_manager .
+COPY go/src/github.com/omegablitz/manager .
 
 COPY public public
 
