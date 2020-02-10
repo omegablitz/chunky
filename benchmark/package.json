@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "debug": "^3.1.0",
-    "mineflayer": "^2.7.0",
+    "debug": "^3.2.6",
+    "mineflayer": "^2.11.0",
     "mineflayer-navigate": "0.0.10",
     "mineflayer-scaffold": "0.0.5",
     "random-seed": "^0.3.0"
